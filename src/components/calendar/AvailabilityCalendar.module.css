@@ -1,0 +1,152 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.calendar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+}
+
+.timeColumn {
+  display: flex;
+  flex-direction: column;
+  min-width: 80px;
+}
+
+.timeHeader {
+  height: 60px;
+}
+
+.timeLabel {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.daysContainer {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+}
+
+.dayColumn {
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+}
+
+.dayHeader {
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 8px;
+}
+
+.dayName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.dayDate {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.slot {
+  height: 60px;
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.slot:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slot.available {
+  background-color: #d1fae5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+.slot.unavailable {
+  background-color: #fee2e2;
+  border-color: #ef4444;
+  color: #991b1b;
+}
+
+.legend {
+  display: flex;
+  gap: 24px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.legendBox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+.legendBox.available {
+  background-color: #d1fae5;
+  border-color: #10b981;
+}
+
+.legendBox.unavailable {
+  background-color: #fee2e2;
+  border-color: #ef4444;
+}
+
+@media (max-width: 768px) {
+  .calendar {
+    gap: 4px;
+  }
+  
+  .dayColumn {
+    min-width: 100px;
+  }
+  
+  .timeColumn {
+    min-width: 60px;
+  }
+}

@@ -1,80 +1,56 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { KpiChart } from '@/components/charts/KpiChart';
-import { getKpis, getMockKpis } from '@/lib/data/kpis';
-import { getActivityLogs } from '@/lib/data/activity';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import { getBookingStats, getRecentBookings } from '@/lib/bookings/queries';
 import styles from './page.module.css';
 
-async function KpiCards() {
-  const kpis = await getKpis();
-  const mockKpis = getMockKpis();
-  const data = kpis.length > 0 ? kpis : mockKpis;
-
-  const latest = data[0] || {
-    new_users: 0,
-    active_users: 0,
-    revenue: 0,
-    tickets: 0,
-  };
+async function StatsCards() {
+  const stats = await getBookingStats();
 
   return (
-    <div className={styles.kpiGrid}>
+    <div className={styles.statsGrid}>
       <Card>
-        <div className={styles.kpiCard}>
-          <h3 className={styles.kpiLabel}>New Users</h3>
-          <p className={styles.kpiValue}>{latest.new_users || 0}</p>
+        <div className={styles.statCard}>
+          <h3 className={styles.statLabel}>Pending</h3>
+          <p className={styles.statValue}>{stats.pending}</p>
         </div>
       </Card>
       <Card>
-        <div className={styles.kpiCard}>
-          <h3 className={styles.kpiLabel}>Active Users</h3>
-          <p className={styles.kpiValue}>{latest.active_users || 0}</p>
+        <div className={styles.statCard}>
+          <h3 className={styles.statLabel}>Approved</h3>
+          <p className={styles.statValue}>{stats.approved}</p>
         </div>
       </Card>
       <Card>
-        <div className={styles.kpiCard}>
-          <h3 className={styles.kpiLabel}>Revenue</h3>
-          <p className={styles.kpiValue}>${(latest.revenue || 0).toLocaleString()}</p>
+        <div className={styles.statCard}>
+          <h3 className={styles.statLabel}>Rejected</h3>
+          <p className={styles.statValue}>{stats.rejected}</p>
         </div>
       </Card>
       <Card>
-        <div className={styles.kpiCard}>
-          <h3 className={styles.kpiLabel}>Tickets</h3>
-          <p className={styles.kpiValue}>{latest.tickets || 0}</p>
+        <div className={styles.statCard}>
+          <h3 className={styles.statLabel}>Total</h3>
+          <p className={styles.statValue}>{stats.total}</p>
         </div>
       </Card>
     </div>
   );
 }
 
-async function ChartSection() {
-  const kpis = await getKpis();
-  const mockKpis = getMockKpis();
-  const data = kpis.length > 0 ? kpis : mockKpis;
+async function RecentBookings() {
+  const bookings = await getRecentBookings(5);
 
-  const chartData = data.map((item) => ({
-    date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-    value: item.revenue || 0,
-  }));
-
-  return (
-    <Card>
-      <h2 className={styles.sectionTitle}>Revenue Trend</h2>
-      <KpiChart data={chartData} />
-    </Card>
-  );
-}
-
-async function RecentActivity() {
-  const logs = await getActivityLogs(5);
-
-  if (logs.length === 0) {
+  if (bookings.length === 0) {
     return (
       <Card>
-        <h2 className={styles.sectionTitle}>Recent Activity</h2>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Recent Bookings</h2>
+        </div>
         <div className={styles.emptyState}>
-          <p>No activity logs found.</p>
+          <p>No bookings yet.</p>
         </div>
       </Card>
     );
@@ -82,16 +58,32 @@ async function RecentActivity() {
 
   return (
     <Card>
-      <h2 className={styles.sectionTitle}>Recent Activity</h2>
-      <div className={styles.activityList}>
-        {logs.map((log: { id: string; action?: string; created_at: string }) => (
-          <div key={log.id} className={styles.activityItem}>
-            <div className={styles.activityContent}>
-              <p className={styles.activityText}>{log.action || 'Activity'}</p>
-              <p className={styles.activityTime}>
-                {new Date(log.created_at).toLocaleString()}
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.sectionTitle}>Recent Bookings</h2>
+        <Link href="/dashboard/bookings">
+          <Button variant="secondary">View All</Button>
+        </Link>
+      </div>
+      <div className={styles.bookingsList}>
+        {bookings.map((booking) => (
+          <div key={booking.id} className={styles.bookingItem}>
+            <div className={styles.bookingInfo}>
+              <p className={styles.bookingName}>{booking.name}</p>
+              <p className={styles.bookingDetails}>
+                {new Date(booking.date).toLocaleDateString()} at {booking.time}
               </p>
             </div>
+            <Badge
+              variant={
+                booking.status === 'approved'
+                  ? 'success'
+                  : booking.status === 'rejected'
+                  ? 'danger'
+                  : 'warning'
+              }
+            >
+              {booking.status}
+            </Badge>
           </div>
         ))}
       </div>
@@ -104,15 +96,11 @@ export default function DashboardPage() {
     <div className={styles.container}>
       <h1 className={styles.title}>Dashboard</h1>
       <Suspense fallback={<Skeleton height={120} />}>
-        <KpiCards />
-      </Suspense>
-      <Suspense fallback={<Skeleton height={400} />}>
-        <ChartSection />
+        <StatsCards />
       </Suspense>
       <Suspense fallback={<Skeleton height={300} />}>
-        <RecentActivity />
+        <RecentBookings />
       </Suspense>
     </div>
   );
 }
-

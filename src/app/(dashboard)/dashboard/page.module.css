@@ -1,47 +1,94 @@
 .container {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  padding: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .title {
   font-size: 32px;
   font-weight: 700;
   color: #111827;
-  margin: 0;
+  margin: 0 0 32px 0;
 }
 
-.kpiGrid {
+.statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
 }
 
-.kpiCard {
+.statCard {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.kpiLabel {
+.statLabel {
   font-size: 14px;
   font-weight: 500;
   color: #6b7280;
   margin: 0;
 }
 
-.kpiValue {
+.statValue {
   font-size: 32px;
   font-weight: 700;
   color: #111827;
   margin: 0;
 }
 
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
 .sectionTitle {
   font-size: 20px;
   font-weight: 600;
   color: #111827;
-  margin: 0 0 24px 0;
+  margin: 0;
+}
+
+.bookingsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bookingItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.bookingItem:hover {
+  background-color: #f9fafb;
+}
+
+.bookingInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bookingName {
+  font-size: 16px;
+  font-weight: 500;
+  color: #111827;
+  margin: 0;
+}
+
+.bookingDetails {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
 }
 
 .emptyState {
@@ -50,33 +97,18 @@
   color: #6b7280;
 }
 
-.activityList {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+@media (max-width: 768px) {
+  .container {
+    padding: 24px;
+  }
+  
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
 }
-
-.activityItem {
-  padding: 16px;
-  background-color: #f9fafb;
-  border-radius: 8px;
-}
-
-.activityContent {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.activityText {
-  font-size: 14px;
-  color: #111827;
-  margin: 0;
-}
-
-.activityTime {
-  font-size: 12px;
-  color: #6b7280;
-  margin: 0;
-}
-

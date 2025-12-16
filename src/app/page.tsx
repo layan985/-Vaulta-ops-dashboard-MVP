@@ -6,16 +6,16 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <h1 className={styles.title}>Vaulta</h1>
+        <h1 className={styles.title}>Flowdesk</h1>
         <p className={styles.subtitle}>
-          Internal ops dashboard for KPIs, users, and activity logs.
+          Professional booking & approval platform. Schedule appointments and manage approvals seamlessly.
         </p>
         <div className={styles.actions}>
-          <Link href="/login">
-            <Button>Login</Button>
+          <Link href="/book">
+            <Button>Book Appointment</Button>
           </Link>
-          <Link href="/dashboard">
-            <Button variant="secondary">View Demo</Button>
+          <Link href="/login">
+            <Button variant="secondary">Admin Login</Button>
           </Link>
         </div>
       </div>

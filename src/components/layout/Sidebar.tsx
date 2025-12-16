@@ -7,9 +7,9 @@ import styles from './Sidebar.module.css';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard' },
-  { href: '/users', label: 'Users' },
-  { href: '/activity', label: 'Activity' },
-  { href: '/settings', label: 'Settings' },
+  { href: '/dashboard/bookings', label: 'Bookings' },
+  { href: '/dashboard/availability', label: 'Availability' },
+  { href: '/dashboard/settings', label: 'Settings' },
 ];
 
 export function Sidebar() {
@@ -18,7 +18,7 @@ export function Sidebar() {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logo}>
-        <h1>Vaulta</h1>
+        <h1>Flowdesk</h1>
       </div>
       <nav className={styles.nav}>
         {navItems.map((item) => {

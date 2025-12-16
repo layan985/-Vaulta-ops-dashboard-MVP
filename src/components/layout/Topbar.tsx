@@ -32,9 +32,6 @@ export function Topbar() {
 
   return (
     <header className={styles.topbar}>
-      <div className={styles.search}>
-        <Input type="search" placeholder="Search..." />
-      </div>
       <div className={styles.userMenu}>
         <span className={styles.email}>{email}</span>
         <Button variant="ghost" onClick={handleSignOut}>

@@ -1,32 +1,33 @@
-# Vaulta — Ops Dashboard
+# Flowdesk — Booking & Approval Platform
 
-A polished, agency-grade internal operations dashboard built with Next.js, TypeScript, and Supabase. Perfect for managing KPIs, users, and activity logs.
+A production-grade MVP booking system with admin approval workflow. Built with Next.js, TypeScript, and Supabase. Perfect for managing appointments, bookings, and client requests.
 
 ## Features
 
-- 🔐 **Authentication** - Secure email/password authentication with Supabase
-- 📊 **Dashboard** - KPI overview with charts and recent activity
-- 👥 **User Management** - User table with search and role badges
-- 📝 **Activity Logs** - Timeline view with filtering capabilities
-- ⚙️ **Settings** - Profile management and theme preferences
+- 📅 **Public Booking Flow** - Clean booking form for clients to request appointments
+- ✅ **Admin Dashboard** - Overview with booking statistics and recent activity
+- 🔐 **Admin Authentication** - Secure email/password authentication with Supabase
+- 📋 **Booking Management** - Approve/reject bookings with status tracking
+- 📊 **Availability Calendar** - Weekly availability management with time slot toggles
+- ⚙️ **Settings** - Business information and notification preferences
 - 🎨 **Modern UI** - Clean, professional design with CSS Modules
 - 🛡️ **Route Protection** - Protected dashboard routes with auth guards
 - ⚡ **Performance** - Optimized with Next.js App Router and Suspense
+- 💼 **Production Ready** - Professional repo structure suitable for portfolio
 
 ## Tech Stack
 
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
 - **Database & Auth**: Supabase (PostgreSQL + Auth)
-- **Styling**: CSS Modules
-- **Charts**: Recharts
+- **Styling**: CSS Modules (no Tailwind)
 - **Deployment**: Vercel-ready
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - Supabase account (free tier works)
 
@@ -34,8 +35,8 @@ A polished, agency-grade internal operations dashboard built with Next.js, TypeS
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/vaulta-ops-dashboard.git
-cd vaulta-ops-dashboard
+git clone https://github.com/your-username/flowdesk.git
+cd flowdesk
 ```
 
 2. Install dependencies:
@@ -54,100 +55,130 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-5. Run the development server:
+5. Set up Supabase tables (see below)
+
+6. Run the development server:
 ```bash
 npm run dev
 ```
 
-6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+7. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Supabase Setup
 
 ### Required Tables
 
-The app will work without tables (showing empty states), but for full functionality, create these tables:
+Create these tables in your Supabase SQL Editor:
 
-#### `profiles`
+#### `bookings`
 ```sql
-CREATE TABLE profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id),
-  email TEXT,
-  role TEXT DEFAULT 'user',
-  created_at TIMESTAMP DEFAULT NOW()
-);
-```
-
-#### `activity_logs`
-```sql
-CREATE TABLE activity_logs (
+CREATE TABLE bookings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  action TEXT,
-  type TEXT,
-  category TEXT,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  date DATE NOT NULL,
+  time TIME NOT NULL,
+  notes TEXT,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
   created_at TIMESTAMP DEFAULT NOW()
 );
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
+
+-- Allow public inserts (for booking form)
+CREATE POLICY "Allow public inserts" ON bookings
+  FOR INSERT
+  TO anon
+  WITH CHECK (true);
+
+-- Allow authenticated users to read all bookings
+CREATE POLICY "Allow authenticated reads" ON bookings
+  FOR SELECT
+  TO authenticated
+  USING (true);
+
+-- Allow authenticated users to update bookings
+CREATE POLICY "Allow authenticated updates" ON bookings
+  FOR UPDATE
+  TO authenticated
+  USING (true);
 ```
 
-#### `kpis_daily`
+#### `availability` (optional - for future use)
 ```sql
-CREATE TABLE kpis_daily (
+CREATE TABLE availability (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  date DATE,
-  new_users INTEGER DEFAULT 0,
-  active_users INTEGER DEFAULT 0,
-  revenue DECIMAL DEFAULT 0,
-  tickets INTEGER DEFAULT 0,
-  created_at TIMESTAMP DEFAULT NOW()
+  date DATE NOT NULL,
+  time TIME NOT NULL,
+  is_available BOOLEAN DEFAULT true,
+  created_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE(date, time)
 );
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE availability ENABLE ROW LEVEL SECURITY;
+
+-- Allow authenticated users to manage availability
+CREATE POLICY "Allow authenticated access" ON availability
+  FOR ALL
+  TO authenticated
+  USING (true);
 ```
+
+### Authentication Setup
+
+1. Go to Authentication > Settings in your Supabase dashboard
+2. Enable Email provider
+3. Configure email templates (optional)
+4. Create your first admin user via Authentication > Users > Add User
 
 ## Project Structure
 
 ```
 src/
   app/
-    page.tsx                 # Public landing page
-    layout.tsx               # Root layout
-    globals.css              # Global styles
+    page.tsx                    # Public landing page
+    layout.tsx                  # Root layout
+    globals.css                 # Global styles
+    (public)/
+      book/page.tsx             # Public booking form
+      success/page.tsx          # Booking success page
     (auth)/
-      login/page.tsx         # Login page
-      signup/page.tsx        # Signup page
+      login/page.tsx            # Admin login page
     (dashboard)/
-      layout.tsx             # Dashboard layout (protected)
-      dashboard/page.tsx     # Dashboard overview
-      users/page.tsx         # Users table
-      activity/page.tsx      # Activity logs
-      settings/page.tsx      # Settings
+      layout.tsx                # Dashboard layout (protected)
+      dashboard/page.tsx        # Dashboard overview
+      bookings/page.tsx         # Bookings management
+      availability/page.tsx     # Availability calendar
+      settings/page.tsx         # Settings
   components/
     layout/
-      Sidebar.tsx            # Navigation sidebar
-      Topbar.tsx             # Top navigation bar
+      Sidebar.tsx               # Navigation sidebar
+      Topbar.tsx                # Top navigation bar
     ui/
-      Button.tsx             # Button component
-      Input.tsx              # Input component
-      Card.tsx               # Card component
-      Badge.tsx              # Badge component
-      Table.tsx               # Table components
-      Skeleton.tsx            # Loading skeleton
-    charts/
-      KpiChart.tsx           # KPI chart component
+      Button.tsx                # Button component
+      Input.tsx                 # Input component
+      Select.tsx                # Select component
+      Card.tsx                  # Card component
+      Badge.tsx                 # Badge component
+      Skeleton.tsx              # Loading skeleton
     tables/
-      UsersTable.tsx         # Users table component
+      BookingsTable.tsx         # Bookings table component
+    calendar/
+      AvailabilityCalendar.tsx  # Availability calendar component
   lib/
     supabase/
-      client.ts              # Browser Supabase client
-      server.ts              # Server Supabase client
+      client.ts                 # Browser Supabase client
+      server.ts                 # Server Supabase client
     auth/
-      actions.ts             # Auth server actions
-      guards.ts              # Route protection guards
-    data/
-      users.ts               # User data helpers
-      activity.ts            # Activity data helpers
-      kpis.ts                # KPI data helpers
+      actions.ts                # Auth server actions
+      guards.ts                 # Route protection guards
+    bookings/
+      queries.ts                # Booking queries
+      mutations.ts              # Booking mutations
     utils/
-      cn.ts                  # Class name utility
-  styles/
-    theme.ts                 # Theme constants
+      cn.ts                     # Class name utility
 ```
 
 ## Environment Variables
@@ -164,25 +195,64 @@ src/
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
 
+## Features Overview
+
+### Public Booking Flow
+
+- Route: `/book`
+- Form fields: Name, Email, Date, Time, Notes (optional)
+- Creates booking with `pending` status
+- Redirects to `/success` page
+
+### Admin Dashboard
+
+- Route: `/dashboard` (protected)
+- Overview cards: Pending, Approved, Rejected, Total bookings
+- Recent bookings preview
+- Quick navigation to bookings management
+
+### Booking Management
+
+- Route: `/dashboard/bookings` (protected)
+- Table view with all bookings
+- Status badges (pending/approved/rejected)
+- Approve/Reject actions for pending bookings
+- Real-time status updates
+
+### Availability Management
+
+- Route: `/dashboard/availability` (protected)
+- Weekly calendar view
+- Toggle available/unavailable slots
+- Visual indicators for availability status
+
+### Settings
+
+- Route: `/dashboard/settings` (protected)
+- Business name configuration
+- Notification email setup
+- Save functionality (can be extended to persist in Supabase)
+
 ## Screenshots
 
 Screenshots will be added to `docs/screenshots/` directory.
 
 ## Roadmap
 
-- [ ] Real-time updates with Supabase subscriptions
-- [ ] Advanced filtering and search
+- [ ] Real-time booking updates with Supabase subscriptions
+- [ ] Email notifications for booking status changes
+- [ ] Calendar integration (Google Calendar, Outlook)
+- [ ] Advanced availability rules (recurring patterns, holidays)
+- [ ] Booking reminders and confirmations
+- [ ] Client portal for viewing booking status
 - [ ] Export functionality (CSV, PDF)
-- [ ] Email notifications
-- [ ] Role-based access control (RBAC)
-- [ ] Dark mode theme
-- [ ] Mobile responsive improvements
-- [ ] Unit and integration tests
-- [ ] API documentation
+- [ ] Mobile app support
+- [ ] Multi-language support
+- [ ] Analytics and reporting
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to this project.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
@@ -190,7 +260,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-For issues and feature requests, please use the [GitHub Issues](https://github.com/your-username/vaulta-ops-dashboard/issues) page.
+For issues and feature requests, please use the [GitHub Issues](https://github.com/your-username/flowdesk/issues) page.
 
 ---
 

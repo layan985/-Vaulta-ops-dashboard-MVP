@@ -1,75 +1,56 @@
-'use client';
-
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { signIn } from '@/lib/auth/actions';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import styles from './page.module.css';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  async function handleSubmit(formData: FormData) {
+    'use server';
+    
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
-      router.push('/dashboard');
-      router.refresh();
+    if (!email || !password) {
+      return;
     }
+
+    await signIn(email, password);
   }
 
   return (
     <div className={styles.container}>
       <Card className={styles.card}>
-        <h1 className={styles.title}>Vaulta</h1>
-        <p className={styles.subtitle}>Sign in to your account</p>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          {error && <div className={styles.error}>{error}</div>}
+        <h1 className={styles.title}>Flowdesk</h1>
+        <p className={styles.subtitle}>Admin Login</p>
+        <form action={handleSubmit} className={styles.form}>
           <div className={styles.field}>
             <label htmlFor="email">Email</label>
             <Input
               id="email"
+              name="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               required
+              placeholder="admin@example.com"
             />
           </div>
           <div className={styles.field}>
             <label htmlFor="password">Password</label>
             <Input
               id="password"
+              name="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               required
+              placeholder="••••••••"
             />
           </div>
-          <Button type="submit" disabled={loading} className={styles.button}>
-            {loading ? 'Signing in...' : 'Sign in'}
+          <Button type="submit" className={styles.button}>
+            Sign in
           </Button>
         </form>
         <p className={styles.footer}>
-          Don&apos;t have an account?{' '}
-          <a href="/signup" className={styles.link}>
-            Sign up
+          <a href="/" className={styles.link}>
+            ← Back to home
           </a>
         </p>
       </Card>

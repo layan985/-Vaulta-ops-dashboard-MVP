@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Vaulta — Ops Dashboard",
-  description: "Internal ops dashboard for KPIs, users, and activity logs.",
+  title: "Flowdesk — Booking & Approval Platform",
+  description: "Professional booking system with admin approval workflow.",
 };
 
 export default function RootLayout({
