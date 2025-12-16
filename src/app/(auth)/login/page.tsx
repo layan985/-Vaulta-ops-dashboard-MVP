@@ -1,4 +1,5 @@
 import { signIn } from '@/lib/auth/actions';
+import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
@@ -49,9 +50,9 @@ export default function LoginPage() {
           </Button>
         </form>
         <p className={styles.footer}>
-          <a href="/" className={styles.link}>
+          <Link href="/" className={styles.link}>
             ← Back to home
-          </a>
+          </Link>
         </p>
       </Card>
     </div>

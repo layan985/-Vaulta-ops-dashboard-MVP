@@ -38,7 +38,7 @@ export default function BookPage() {
         <Card className={styles.card}>
           <h1 className={styles.title}>Book an Appointment</h1>
           <p className={styles.subtitle}>
-            Fill out the form below to request an appointment. We'll review your request and get back to you soon.
+            Fill out the form below to request an appointment. We&apos;ll review your request and get back to you soon.
           </p>
           
           <form action={handleSubmit} className={styles.form}>
@@ -117,3 +117,4 @@ export default function BookPage() {
     </div>
   );
 }
+

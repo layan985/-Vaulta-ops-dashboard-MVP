@@ -10,8 +10,8 @@ export default function SuccessPage() {
         <div className={styles.icon}>✓</div>
         <h1 className={styles.title}>Booking Request Submitted</h1>
         <p className={styles.message}>
-          Thank you for your booking request. We've received your information and will review it shortly.
-          You'll receive an email confirmation once your booking has been approved.
+          Thank you for your booking request. We&apos;ve received your information and will review it shortly.
+          You&apos;ll receive an email confirmation once your booking has been approved.
         </p>
         <div className={styles.actions}>
           <Link href="/book">
@@ -25,3 +25,4 @@ export default function SuccessPage() {
     </div>
   );
 }
+
