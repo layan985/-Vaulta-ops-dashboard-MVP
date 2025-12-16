@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #fafafa;
+}
+
+.content {
+  flex: 1;
+  margin-left: 240px;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  margin-top: 64px;
+  padding: 24px;
+  flex: 1;
+}
+

@@ -1,0 +1,31 @@
+.topbar {
+  height: 64px;
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: fixed;
+  top: 0;
+  left: 240px;
+  right: 0;
+  z-index: 10;
+}
+
+.search {
+  flex: 1;
+  max-width: 400px;
+}
+
+.userMenu {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.email {
+  font-size: 14px;
+  color: #6b7280;
+}
+
