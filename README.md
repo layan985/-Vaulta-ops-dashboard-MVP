@@ -1,5 +1,7 @@
 # Flowdesk — Booking & Approval Platform
 
+> **Earlier software/product project.** My current work is focused on applied economics, causal inference, AI and labor markets, research software, and reproducible data infrastructure. See [MarketMind](https://github.com/layan985/marketmind), the [MENA Open Data & Evidence Lab](https://github.com/layan985/mena-open-evidence-lab), and the [Econometrics Notebook Library](https://github.com/layan985/econometrics-notebook-library). — **Layan Oraidi** (also appearing in some award/academic records as **Layan Aloreidi**)
+
 A production-grade MVP booking system with admin approval workflow. Built with Next.js, TypeScript, and Supabase. Perfect for managing appointments, bookings, and client requests.
 
 ## Features
@@ -158,7 +160,7 @@ src/
       Topbar.tsx                # Top navigation bar
     ui/
       Button.tsx                # Button component
-      Input.tsx                 # Input component
+      Input.tsx                 # Form input component
       Select.tsx                # Select component
       Card.tsx                  # Card component
       Badge.tsx                 # Badge component
@@ -166,7 +168,7 @@ src/
     tables/
       BookingsTable.tsx         # Bookings table component
     calendar/
-      AvailabilityCalendar.tsx  # Availability calendar component
+      AvailabilityCalendar.tsx  # Availability calendar
   lib/
     supabase/
       client.ts                 # Browser Supabase client
